@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "redis.fullname" . }}
+  labels:
+{{ include "redis.labels" . | indent 4 }}
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "redis.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "redis.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "redis.fullname" . }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "docker.io/redis:{{ .Values.version }}"
+          ports:
+            - name: redis
+              containerPort: 6379
+              protocol: TCP
+          args: ['--appendonly','yes']
+          readinessProbe:
+            tcpSocket:
+              port: 6379
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: "/data"

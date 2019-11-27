@@ -1,0 +1,2 @@
+The application is now available.
+Connect to it from the cluster using the {{ include "redis.fullname" . }} service.

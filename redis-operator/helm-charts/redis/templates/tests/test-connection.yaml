@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "redis.fullname" . }}-test-connection"
+  labels:
+{{ include "redis.labels" . | indent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: redis
+      image: "docker.io/redis:{{ .Values.version }}"
+      command: ['redis-cli']
+      args:  ['-h','{{ include "redis.fullname" . }}:6379','--eval','ping']
+  restartPolicy: Never

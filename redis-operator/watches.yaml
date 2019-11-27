@@ -1,0 +1,5 @@
+---
+- version: v1alpha1
+  group: example.cloudflight.io
+  kind: Redis
+  chart: /opt/helm/helm-charts/redis

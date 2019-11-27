@@ -1,0 +1,7 @@
+apiVersion: example.cloudflight.io/v1alpha1
+kind: Redis
+metadata:
+  name: example-redis
+spec:
+  storage: '5Gi'
+  resources: {}
