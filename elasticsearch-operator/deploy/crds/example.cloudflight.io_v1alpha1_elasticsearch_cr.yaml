@@ -1,0 +1,5 @@
+apiVersion: example.cloudflight.io/v1alpha1
+kind: ElasticSearch
+metadata:
+  name: example-elasticsearch
+spec: {}

@@ -1,0 +1,13 @@
+---
+# defaults file for elasticsearch
+
+cluster_name: elasticsearch
+replicas: 3
+storage: 10Gi
+resources:
+  limits:
+    cpu: "500m"
+    memory: "4Gi"
+  requests:
+    cpu: "250m"
+    memory: "4Gi"

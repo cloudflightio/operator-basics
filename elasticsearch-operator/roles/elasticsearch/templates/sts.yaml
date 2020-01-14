@@ -1,0 +1,72 @@
+---
+apiVersion: "apps/v1beta1"
+kind: StatefulSet
+metadata:
+  name: "{{ meta.name }}"
+  namespace: "{{ meta.namespace }}"
+  labels:
+    app:
+      "{{ meta.name }}"
+spec:
+  replicas: {{replicas}}
+  selector:
+    matchLabels:
+      app: "{{ meta.name }}"
+  volumeClaimTemplates:
+  - metadata:
+      name: "{{ meta.name }}-storage"
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      resources:
+        requests:
+          storage: "{{ storage }}"
+  template:
+    metadata:
+      labels:
+        app: "{{ meta.name }}"
+    spec:
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - configMap:
+          name: "{{ meta.name }}"
+        name: config-volume
+      containers:
+      - name: elasticsearch
+        env:
+        image: 'docker.elastic.co/elasticsearch/elasticsearch-oss:7.5'
+        livenessProbe:
+          exec:
+            command:
+            - /usr/bin/pgrep
+            - -x
+            - java
+          failureThreshold: 3
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 3
+        ports:
+        - containerPort: 9300
+          name: transport
+          protocol: TCP
+        - containerPort: 9200
+          name: http
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /_cat/health
+            port: 9200
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 3
+        resources: {{ resources }}
+        volumeMounts:
+        - mountPath: /usr/share/elasticsearch/data
+          name: "{{ meta.name }}-storage"
+        - mountPath: /usr/share/elasticsearch/config/elasticsearch.yml
+          name: config-volume
+          subPath: elasticsearch.yml

@@ -1,0 +1,16 @@
+---
+- name: "ES Config Map"
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'cm.yaml') | from_yaml }}"
+
+- name: "ES Service"
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'service.yaml') | from_yaml }}"
+
+
+- name: "ES Statefulset"
+  k8s:
+    state: present
+    definition: "{{ lookup('template', 'sts.yaml') | from_yaml }}"
