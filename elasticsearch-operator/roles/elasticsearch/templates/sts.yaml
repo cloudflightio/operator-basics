@@ -25,6 +25,7 @@ spec:
     metadata:
       labels:
         app: "{{ meta.name }}"
+        tuned.openshift.io/elasticsearch: 'true'
     spec:
       terminationGracePeriodSeconds: 10
       volumes:
@@ -34,7 +35,7 @@ spec:
       containers:
       - name: elasticsearch
         env:
-        image: 'docker.elastic.co/elasticsearch/elasticsearch-oss:7.5'
+        image: 'docker.elastic.co/elasticsearch/elasticsearch-oss:7.5.1'
         livenessProbe:
           exec:
             command:
