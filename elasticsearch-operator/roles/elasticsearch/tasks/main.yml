@@ -14,3 +14,29 @@
   k8s:
     state: present
     definition: "{{ lookup('template', 'sts.yaml') | from_yaml }}"
+
+- name: "Wait for finished cluster initialization"
+  k8s:
+    state: present
+    kind: Pod
+    name: "{{ meta.name }}-0"
+    namespace: "{{ meta.namespace }}"
+    wait: true
+    wait_condition:
+      type: Ready
+      status: yes
+
+- name: "Fetch status"
+  uri:
+    url: "http://{{ meta.name }}:9200/_cluster/health"
+    method: GET
+  register: es_status
+
+- operator_sdk.util.k8s_status:
+    api_version: "example.cloudflight.io/v1alpha1"
+    kind: "ElasticSearch"
+    name: "{{ meta.name }}"
+    namespace: "{{ meta.namespace }}"
+    status:
+      completed: true
+      health: "{{ es_status.json }}"

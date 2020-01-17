@@ -3,3 +3,4 @@
   group: example.cloudflight.io
   kind: ElasticSearch
   role: /opt/ansible/roles/elasticsearch
+  manageStatus: false
