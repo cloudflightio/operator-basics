@@ -4,3 +4,4 @@
   kind: ElasticSearch
   role: /opt/ansible/roles/elasticsearch
   manageStatus: false
+  reconcilePeriod: "30s"

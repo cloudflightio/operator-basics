@@ -2,4 +2,6 @@
 - version: v1alpha1
   group: example.cloudflight.io
   kind: ElasticSearch
-  role: /home/dsuess/Projects/cloudflight/operator-basics/elasticsearch-operator/roles/elasticsearch
+  role: <GIT-ROOT>/elasticsearch-operator/roles/elasticsearch
+  manageStatus: false
+  reconcilePeriod: "30s"
